@@ -6,6 +6,8 @@ const postModel = require('./models/post');
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
+const path = require('path');
+
 
 app.set("view engine", "ejs");
 app.set('views', path.join(__dirname, 'views'));
