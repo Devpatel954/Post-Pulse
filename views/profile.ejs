@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+
+    <!-- Welcome Header -->
+    <div class="bg-gray-800 py-6 shadow-md mb-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-4xl font-extrabold text-blue-400">Welcome to PostPulse</h1>
+            <p class="text-sm font-semibold text-gray-400 mt-2">Develpoed with passion by <span class="text-white">Dev Patel</span></p>
+        </div>
+    </div>
+
+    <!-- User Info and Logout -->
+    <div class="max-w-4xl mx-auto p-6">
+        <div class="bg-gray-800 rounded-lg shadow-md p-6 mb-6 flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold"><%= user.name %></h1>
+                <p class="text-gray-400">@<%= user.username %></p>
+            </div>
+            <form action="/logout" method="POST">
+                <button type="submit"
+                    class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300">
+                    Logout
+                </button>
+            </form>
+        </div>
+
+        <!-- Create Post -->
+        <div class="bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-lg font-bold mb-4">Create Post</h2>
+            <form action="/post" method="POST">
+                <textarea name="content" rows="3" placeholder="What's on your mind?"
+                    class="w-full p-3 bg-gray-700 text-gray-100 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"></textarea>
+                <button type="submit"
+                    class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                    Post
+                </button>
+            </form>
+            <p class="text-sm text-gray-400 mt-4 text-center">Empowering voices, one post at a time</p>
+        </div>
+
+        <!-- User Posts -->
+        <div class="space-y-4">
+            <% posts.forEach(post => { %>
+            <div class="bg-gray-800 rounded-lg shadow-md p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h3 class="font-bold"><%= user.name %></h3>
+                        <p class="text-sm text-gray-400"><%= post.updatedAt.toDateString() %></p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <!-- Like Button -->
+                        <form action="/like/<%= post._id %>" method="POST">
+                            <button
+                                class="bg-green-500 text-white py-1 px-3 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300">
+                                Like (<%= post.likes.length %>)
+                            </button>
+                        </form>
+
+                        <!-- Edit Button -->
+                        <button
+                            onclick="toggleEditForm('<%= post._id %>')"
+                            class="bg-yellow-500 text-white py-1 px-3 rounded-lg hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-300">
+                            Edit
+                        </button>
+
+                        <!-- Delete Button -->
+                        <form action="/delete/<%= post._id %>" method="POST">
+                            <button
+                                class="bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Post Content -->
+                <p id="post-content-<%= post._id %>" class="text-gray-200"><%= post.content %></p>
+
+                <!-- Edit Form -->
+                <form id="edit-form-<%= post._id %>" action="/update/<%= post._id %>" method="POST" class="hidden">
+                    <textarea name="content" rows="3" class="w-full p-3 bg-gray-700 text-gray-100 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 mb-4"><%= post.content %></textarea>
+                    <button type="submit"
+                        class="bg-yellow-500 text-white py-1 px-4 rounded-lg hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-300">
+                        Save
+                    </button>
+                    <button type="button" onclick="toggleEditForm('<%= post._id %>')"
+                        class="bg-gray-600 text-white py-1 px-4 rounded-lg hover:bg-gray-700">
+                        Cancel
+                    </button>
+                </form>
+
+                <!-- Comments -->
+                <div class="mt-4">
+                    <h4 class="text-sm font-bold mb-2">Comments:</h4>
+                    <ul class="space-y-2">
+                        <% post.comments.forEach(comment => { %>
+                        <li class="bg-gray-700 p-2 rounded-lg">
+                            <strong><%= comment.user.name %>:</strong> <%= comment.text %>
+                        </li>
+                        <% }); %>
+                    </ul>
+                </div>
+
+                <!-- Add Comment -->
+                <form action="/comment/<%= post._id %>" method="POST" class="mt-4">
+                    <input type="text" name="text" placeholder="Write a comment..."
+                        class="w-full p-2 bg-gray-700 text-gray-100 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button type="submit"
+                        class="mt-2 bg-blue-500 text-white py-1 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                        Comment
+                    </button>
+                </form>
+            </div>
+            <% }); %>
+        </div>
+    </div>
+
+    <script>
+        function toggleEditForm(postId) {
+            const content = document.getElementById(`post-content-${postId}`);
+            const form = document.getElementById(`edit-form-${postId}`);
+            content.classList.toggle('hidden');
+            form.classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+

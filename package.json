@@ -1,0 +1,29 @@
+{
+  "name": "postpulse",
+  "version": "1.0.0",
+  "main": "app.js",
+  "engines": {
+    "node": "14.x"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["postpulse", "social-media", "nodejs", "express", "mongodb"],
+  "author": "Dev Patel",
+  "license": "ISC",
+  "description": "A sleek and modern social media platform for sharing posts and engaging with others.",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.8.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
+
