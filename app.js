@@ -1,3 +1,4 @@
+ 
 const express = require('express');
 const app = express();
 const userModel = require('./models/user');
@@ -11,7 +12,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-const JWT_SECRET = "fffffff";
+// JWT_SECRET from environment variable
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET) {
+    throw new Error("JWT_SECRET environment variable is required.");
+}
 
 // Middleware for authentication
 function authenticateUser(req, res, next) {
@@ -24,7 +30,6 @@ function authenticateUser(req, res, next) {
         next();
     });
 }
-
 
 // Combined Login and Registration Page
 app.get('/', (req, res) => {
@@ -179,10 +184,10 @@ app.post('/logout', (req, res) => {
 });
 
 // Start Server
-app.listen(5000, () => {
-    console.log("Server is running");
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
-
 
 
 
